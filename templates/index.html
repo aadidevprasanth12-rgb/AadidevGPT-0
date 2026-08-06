@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>AadidevGPT-0</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+
+    font-family:"Inter",sans-serif;
+    background:#0b0b0b;
+    color:white;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    width:100vw;
+    height:100vh;
+
+    overflow:hidden;
+
+}
+
+/* Background glow */
+
+body::before{
+
+    content:"";
+
+    position:fixed;
+
+    width:700px;
+    height:700px;
+
+    background:radial-gradient(circle,#2463ff22 0%,transparent 70%);
+
+    top:-250px;
+    right:-250px;
+
+    pointer-events:none;
+
+}
+
+/* Main Window */
+
+.chat-container{
+
+    width:100%;
+    max-width:850px;
+
+    height:92vh;
+
+    background:#111111;
+
+    border:1px solid #262626;
+
+    border-radius:20px;
+
+    display:flex;
+    flex-direction:column;
+
+    overflow:hidden;
+
+    box-shadow:
+
+        0 0 40px rgba(0,0,0,.6),
+
+        0 0 70px rgba(59,130,246,.08);
+
+}
+
+/* Header */
+
+.chat-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:20px 26px;
+
+    background:#151515;
+
+    border-bottom:1px solid #262626;
+
+}
+
+.logo{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:14px;
+
+}
+
+.logo-circle{
+
+    width:14px;
+    height:14px;
+
+    border-radius:50%;
+
+    background:#3b82f6;
+
+    box-shadow:
+
+        0 0 12px #3b82f6,
+
+        0 0 22px #3b82f6;
+
+}
+
+.title{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    font-weight:700;
+
+    font-size:18px;
+
+    color:white;
+
+}
+
+.model{
+
+    color:#60a5fa;
+
+    font-size:14px;
+
+    font-weight:500;
+
+}
+
+/* Chat */
+
+.chat-box{
+
+    flex:1;
+
+    padding:30px;
+
+    overflow-y:auto;
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:22px;
+
+    scroll-behavior:smooth;
+
+}
+
+/* Scrollbar */
+
+.chat-box::-webkit-scrollbar{
+
+    width:7px;
+
+}
+
+.chat-box::-webkit-scrollbar-thumb{
+
+    background:#303030;
+
+    border-radius:20px;
+
+}
+
+/* Messages */
+
+.message{
+
+    max-width:82%;
+
+    padding:16px 18px;
+
+    border-radius:18px;
+
+    line-height:1.7;
+
+    animation:fadeIn .25s ease;
+
+    word-wrap:break-word;
+
+    white-space:pre-wrap;
+
+}
+
+.user-message{
+
+    align-self:flex-end;
+
+    background:linear-gradient(135deg,#3b82f6,#2563eb);
+
+    color:white;
+
+    border-bottom-right-radius:6px;
+
+}
+
+.bot-message{
+
+    align-self:flex-start;
+
+    background:#191919;
+
+    border:1px solid #2d2d2d;
+
+    color:#ececec;
+
+    border-bottom-left-radius:6px;
+
+}
+
+/* Input */
+
+.input-area{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:15px;
+
+    padding:22px;
+
+    border-top:1px solid #262626;
+
+    background:#151515;
+
+}
+
+input{
+
+    flex:1;
+
+    padding:16px 18px;
+
+    border-radius:14px;
+
+    border:1px solid #303030;
+
+    background:#101010;
+
+    color:white;
+
+    outline:none;
+
+    font-size:15px;
+
+    transition:.25s;
+
+}
+
+input:focus{
+
+    border-color:#3b82f6;
+
+    box-shadow:0 0 10px rgba(59,130,246,.25);
+
+}
+
+input::placeholder{
+
+    color:#666;
+
+}
+
+button{
+
+    border:none;
+
+    background:#3b82f6;
+
+    color:white;
+
+    padding:16px 26px;
+
+    border-radius:14px;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+}
+
+button:hover{
+
+    background:#2563eb;
+
+    transform:translateY(-2px);
+
+    box-shadow:0 0 18px rgba(59,130,246,.35);
+
+}
+
+/* Welcome Box */
+
+.welcome{
+
+    text-align:center;
+
+    margin:auto;
+
+    max-width:500px;
+
+}
+
+.welcome h1{
+
+    font-size:38px;
+
+    margin-bottom:15px;
+
+}
+
+.welcome p{
+
+    color:#9a9a9a;
+
+    font-size:17px;
+
+    line-height:1.7;
+
+}
+
+/* Fade Animation */
+
+@keyframes fadeIn{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(10px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+
+    }
+
+}
+
+/* Mobile */
+
+@media(max-width:700px){
+
+.chat-container{
+
+    width:100vw;
+
+    height:100vh;
+
+    border-radius:0;
+
+}
+
+.chat-box{
+
+    padding:18px;
+
+}
+
+.message{
+
+    max-width:95%;
+
+}
+
+}
+
+</style>
+
+    </head>
+
+<body>
+
+<div class="chat-container">
+
+    <!-- Header -->
+    <div class="chat-header">
+
+        <div class="logo">
+
+            <div class="logo-circle"></div>
+
+            <div class="title">
+
+                AadidevGPT-0
+
+                <span class="model">
+                    / model 04Aadi
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Chat Messages -->
+    <div class="chat-box" id="chatBox">
+
+
+        <div class="welcome">
+
+            <h1>
+                👋 Welcome to AadidevGPT-0
+            </h1>
+
+            <p>
+                Your personal AI assistant powered by model 04Aadi.
+                <br>
+                Ask me anything.
+            </p>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- Input Area -->
+    <div class="input-area">
+
+
+        <input
+
+        type="text"
+
+        id="userInput"
+
+        placeholder="Ask AadidevGPT anything..."
+
+        onkeypress="handleKey(event)"
+
+        autocomplete="off"
+
+        >
+
+
+        <button onclick="sendMessage()">
+
+            Send
+
+        </button>
+
+
+    </div>
+
+
+</div>
+
+
+
+<script>
+
+
+async function sendMessage(){
+
+
+    const inputField = document.getElementById("userInput");
+
+    const message = inputField.value.trim();
+
+
+    if(!message) return;
+
+
+
+    appendMessage(message,"user-message");
+
+
+    inputField.value="";
+
+
+
+    try{
+
+
+        const response = await fetch("/chat",{
+
+
+            method:"POST",
+
+
+            headers:{
+
+
+                "Content-Type":"application/json"
+
+
+            },
+
+
+            body:JSON.stringify({
+
+
+                message:message
+
+
+            })
+
+
+        });
+
+
+
+        const data = await response.json();
+
+
+
+        let cleanResponse = data.response.replace(/\*\*/g,"");
+
+
+
+        appendMessage(cleanResponse,"bot-message");
+
+
+
+    }
+
+    catch(error){
+
+
+        appendMessage(
+
+            "⚠️ Error communicating with AadidevGPT-0.",
+
+            "bot-message"
+
+        );
+
+
+    }
+
+
+}
+
+
+
+
+
+function appendMessage(text,className){
+
+
+    const chatBox=document.getElementById("chatBox");
+
+
+
+    // Remove welcome message after first message
+
+    const welcome=document.querySelector(".welcome");
+
+
+    if(welcome){
+
+        welcome.remove();
+
+    }
+
+
+
+
+    const msgDiv=document.createElement("div");
+
+
+
+    msgDiv.className=`message ${className}`;
+
+
+
+    msgDiv.textContent=text;
+
+
+
+    chatBox.appendChild(msgDiv);
+
+
+
+    chatBox.scrollTop=chatBox.scrollHeight;
+
+
+
+}
+
+
+
+
+
+
+function handleKey(event){
+
+
+    if(event.key==="Enter"){
+
+
+        sendMessage();
+
+
+    }
+
+
+}
+
+
+
+</script>
+
+
+
+</body>
+
+</html>
